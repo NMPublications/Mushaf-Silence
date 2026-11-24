@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1714">
+  <title>Mushaf Silence — Gap Audio</title>
+  <style>
+    :root {
+      --ink: #18231f;
+      --muted: #718078;
+      --paper: #f3f1e8;
+      --panel: #fffefa;
+      --line: #dde1d8;
+      --green: #1e6b50;
+      --green-dark: #123e32;
+      --gold: #c59a52;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 15% 0%, rgba(197, 154, 82, .10), transparent 28rem),
+        var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .shell {
+      width: min(1180px, calc(100% - 40px));
+      margin-inline: auto;
+    }
+
+    header {
+      height: 82px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid rgba(24, 35, 31, .09);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -.3px;
+    }
+
+    .mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      color: #fff;
+      background: var(--green);
+      border-radius: 50%;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.18);
+    }
+
+    .mark svg { width: 22px; height: 22px; }
+
+    .github-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .github-link:hover { color: var(--green); }
+
+    main { padding: 54px 0 64px; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      align-items: end;
+      gap: 32px;
+      margin-bottom: 38px;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 12px;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 34px;
+      height: 2px;
+      background: var(--gold);
+    }
+
+    h1 {
+      max-width: 760px;
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(42px, 7vw, 76px);
+      line-height: .98;
+      letter-spacing: -3.5px;
+      font-weight: 600;
+    }
+
+    .hero-copy {
+      max-width: 520px;
+      margin: 20px 0 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .count {
+      justify-self: end;
+      width: 220px;
+      padding: 20px 22px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 254, 250, .55);
+    }
+
+    .count strong {
+      display: block;
+      color: var(--green);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 38px;
+      line-height: 1;
+    }
+
+    .count span {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .search {
+      position: relative;
+      flex: 1;
+    }
+
+    .search svg {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      width: 18px;
+      transform: translateY(-50%);
+      color: var(--muted);
+    }
+
+    input {
+      width: 100%;
+      height: 48px;
+      padding: 0 16px 0 46px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      outline: none;
+      background: var(--panel);
+      color: var(--ink);
+      font: inherit;
+    }
+
+    input:focus {
+      border-color: rgba(30, 107, 80, .55);
+      box-shadow: 0 0 0 3px rgba(30, 107, 80, .08);
+    }
+
+    .sort {
+      height: 48px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel);
+      color: var(--ink);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .tracks {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--panel);
+      box-shadow: 0 18px 50px rgba(24, 35, 31, .055);
+    }
+
+    .track {
+      display: grid;
+      grid-template-columns: 54px 1fr 74px 42px;
+      align-items: center;
+      min-height: 76px;
+      border-bottom: 1px solid var(--line);
+      padding: 10px 16px;
+      transition: background .16s ease;
+    }
+
+    .track:last-child { border-bottom: 0; }
+    .track:hover { background: #fafbf6; }
+    .track.active { background: #edf5ef; }
+
+    .play {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border: 0;
+      border-radius: 50%;
+      background: var(--ink);
+      color: #fff;
+      cursor: pointer;
+      transition: transform .15s ease, background .15s ease;
+    }
+
+    .play:hover { transform: scale(1.05); background: var(--green); }
+    .play svg { width: 16px; height: 16px; }
+
+    .track-name {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .track-name small {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .7px;
+      text-transform: uppercase;
+    }
+
+    .duration {
+      color: var(--muted);
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .download {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .download:hover { color: var(--green); background: #fff; }
+    .download svg { width: 17px; height: 17px; }
+
+    .empty {
+      display: none;
+      padding: 40px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 760px) {
+      .shell { width: min(100% - 28px, 1180px); }
+      header { height: 70px; }
+      main { padding-top: 36px; }
+      .hero { grid-template-columns: 1fr; }
+      h1 { letter-spacing: -2px; }
+      .count { justify-self: start; width: 180px; }
+      .toolbar { flex-direction: column; }
+      .sort { width: 100%; }
+      .track { grid-template-columns: 48px 1fr 58px 36px; padding-inline: 10px; }
+      footer { flex-direction: column; gap: 6px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="shell header-inner">
+      <div class="brand">
+        <span class="mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M8 5.5c3.5 1.1 6.2 3.8 7.3 7.3M8 9.5c2.1.7 3.8 2.4 4.5 4.5M12 3.5v17M8 16.5c1.2 1.2 2.5 2.5 4 4"/>
+          </svg>
+        </span>
+        Mushaf Silence
+      </div>
+      <a class="github-link" href="https://github.com/NMPublications/Mushaf-Silence">View repository ↗</a>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Audio library</p>
+        <h1>Silence,<br>measured.</h1>
+        <p class="hero-copy">A focused collection of silent audio gaps for Mushaf recordings. Select a track to preview or download it directly.</p>
+      </div>
+      <aside class="count" aria-label="Collection size">
+        <strong id="trackCount">31</strong>
+        <span>audio tracks</span>
+      </aside>
+    </section>
+
+    <section aria-label="Audio tracks">
+      <div class="toolbar">
+        <label class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg>
+          <input id="search" type="search" placeholder="Search gap duration" autocomplete="off">
+        </label>
+        <select id="sort" class="sort" aria-label="Sort tracks">
+          <option value="default">Original order</option>
+          <option value="asc">Shortest first</option>
+          <option value="desc">Longest first</option>
+        </select>
+      </div>
+
+      <div class="tracks" id="tracks"></div>
+      <div class="empty" id="empty">No matching tracks found.</div>
+    </section>
+
+    <footer>
+      <span>Mushaf Silence Library</span>
+      <span id="status">Ready to play</span>
+    </footer>
+  </main>
+
+  <script>
+    const durations = [1,2,3,4,5,6,7,8,9,10,12,14,16,18,20,22,24,26,28,30,35,40,45,50,55,60,70,80,90,105,120];
+    const tracks = durations.map(seconds => ({ seconds, file: `gap_${seconds}.mp3` }));
+
+    const tracksEl = document.getElementById('tracks');
+    const searchEl = document.getElementById('search');
+    const sortEl = document.getElementById('sort');
+    const emptyEl = document.getElementById('empty');
+    const statusEl = document.getElementById('status');
+    let currentAudio = null;
+    let currentRow = null;
+
+    const playIcon = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.8v14.4c0 .8.9 1.3 1.6.8l9.8-7.2c.5-.4.5-1.2 0-1.6L8.6 4c-.7-.5-1.6 0-1.6.8Z"/></svg>';
+    const pauseIcon = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.5v14H7zm6.5 0H17v14h-3.5z"/></svg>';
+    const downloadIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 20h14"/></svg>';
+
+    function formatDuration(seconds) {
+      if (seconds < 60) return `${seconds} seconds`;
+      const minutes = Math.floor(seconds / 60);
+      const remainder = seconds % 60;
+      return remainder ? `${minutes}m ${remainder}s` : `${minutes} minute${minutes === 1 ? '' : 's'}`;
+    }
+
+    function stopCurrent() {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio = null;
+      }
+      if (currentRow) {
+        currentRow.classList.remove('active');
+        currentRow.querySelector('.play').innerHTML = playIcon;
+        currentRow = null;
+      }
+    }
+
+    function render() {
+      const query = searchEl.value.trim().toLowerCase();
+      let visible = tracks.filter(track => {
+        const duration = formatDuration(track.seconds).toLowerCase();
+        return track.seconds.toString().includes(query) || duration.includes(query);
+      });
+
+      if (sortEl.value === 'asc') visible.sort((a, b) => a.seconds - b.seconds);
+      if (sortEl.value === 'desc') visible.sort((a, b) => b.seconds - a.seconds);
+
+      tracksEl.innerHTML = '';
+      visible.forEach(track => {
+        const row = document.createElement('article');
+        row.className = 'track';
+        row.innerHTML = `
+          <button class="play" type="button" aria-label="Play ${formatDuration(track.seconds)} gap">${playIcon}</button>
+          <div class="track-name">Gap ${track.seconds}<small>Silent audio</small></div>
+          <time class="duration">${formatDuration(track.seconds)}</time>
+          <a class="download" href="${track.file}" download aria-label="Download ${track.file}" title="Download">${downloadIcon}</a>
+        `;
+
+        const button = row.querySelector('.play');
+        button.addEventListener('click', () => {
+          if (currentRow === row && currentAudio && !currentAudio.paused) {
+            currentAudio.pause();
+            button.innerHTML = playIcon;
+            row.classList.remove('active');
+            statusEl.textContent = 'Playback paused';
+            return;
+          }
+
+          if (currentRow === row && currentAudio) {
+            currentAudio.play();
+            button.innerHTML = pauseIcon;
+            row.classList.add('active');
+            statusEl.textContent = `Playing ${formatDuration(track.seconds)}`;
+            return;
+          }
+
+          stopCurrent();
+          currentRow = row;
+          currentAudio = new Audio(track.file);
+          currentAudio.play().catch(() => {
+            statusEl.textContent = 'Unable to play this track';
+          });
+          button.innerHTML = pauseIcon;
+          row.classList.add('active');
+          statusEl.textContent = `Playing ${formatDuration(track.seconds)}`;
+
+          currentAudio.addEventListener('ended', () => {
+            button.innerHTML = playIcon;
+            row.classList.remove('active');
+            statusEl.textContent = 'Playback complete';
+            currentAudio = null;
+            currentRow = null;
+          });
+        });
+
+        tracksEl.appendChild(row);
+      });
+
+      emptyEl.style.display = visible.length ? 'none' : 'block';
+      document.getElementById('trackCount').textContent = visible.length;
+    }
+
+    searchEl.addEventListener('input', render);
+    sortEl.addEventListener('change', render);
+    render();
+  </script>
+</body>
+</html>
